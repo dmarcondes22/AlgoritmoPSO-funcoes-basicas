@@ -37,8 +37,8 @@ for _ in range(num_partículas):
     posição = [x, y]
     velocidade = [0.0, 0.0]
     partícula = {'posição': posição, 'velocidade': velocidade, 'melhor_posição': posição, 'melhor_valor': float("inf")}
-    partículas.append(partícula)
-    resultados_partículas.append((posição, Função_obj(x, y)))
+    partículas = partículas + [partícula]
+    resultados_partículas = resultados_partículas + [([posição, Função_obj(x, y)])]
 
 # Iterações do PSO
 iteração = 0
