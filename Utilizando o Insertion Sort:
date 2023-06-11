@@ -1,0 +1,85 @@
+import random
+
+# Definir a função objetivo:
+def Função_obj(x, y):
+    return (1 - x) ** 2 + 100 * (y - x ** 2) ** 2
+
+# Parâmetros do PSO
+num_partículas = 30
+max_iterações = 100
+c1 = 2.0
+c2 = 2.0
+w = 0.7
+
+# Intervalo de busca
+intervalo_busca = (-5.0, 5.0)
+
+# Inicialização das partículas
+partículas = []
+melhor_posição_global = [0.0, 0.0]
+melhor_valor_global = float("inf")
+resultados_partículas = []
+
+for _ in range(num_partículas):
+    x = random.uniform(intervalo_busca[0], intervalo_busca[1])
+    y = random.uniform(intervalo_busca[0], intervalo_busca[1])
+    posição = [x, y]
+    velocidade = [0.0, 0.0]
+    partícula = {'posição': posição, 'velocidade': velocidade, 'melhor_posição': posição, 'melhor_valor': float("inf")}
+    partículas.append(partícula)
+    resultados_partículas.append((posição, Função_obj(x, y)))
+
+# Iterações do PSO
+iteração = 0
+while iteração < max_iterações:
+    for i in range(num_partículas):
+        partícula = partículas[i]
+        x, y = partícula['posição']
+        velocidade_x = partícula['velocidade'][0]
+        velocidade_y = partícula['velocidade'][1]
+
+        # Atualizar a velocidade e posição da partícula
+        r1 = random.random()
+        r2 = random.random()
+
+        nova_velocidade_x = (w * velocidade_x) + (c1 * r1 * (partícula['melhor_posição'][0] - x)) + (c2 * r2 * (melhor_posição_global[0] - x))
+        nova_velocidade_y = (w * velocidade_y) + (c1 * r1 * (partícula['melhor_posição'][1] - y)) + (c2 * r2 * (melhor_posição_global[1] - y))
+        novo_x = x + nova_velocidade_x
+        novo_y = y + nova_velocidade_y
+
+        # Limitar as posições dentro do intervalo de busca
+        novo_x = max(intervalo_busca[0], min(intervalo_busca[1], novo_x))
+        novo_y = max(intervalo_busca[0], min(intervalo_busca[1], novo_y))
+
+        partícula['posição'] = [novo_x, novo_y]
+        partícula['velocidade'] = [nova_velocidade_x, nova_velocidade_y]
+
+        # Avaliar a nova posição
+        valor = Função_obj(novo_x, novo_y)
+
+        # Atualizar a melhor posição global
+        if valor < melhor_valor_global:
+            melhor_valor_global = valor
+            melhor_posição_global = [novo_x, novo_y]
+
+        # Atualizar a melhor posição local da partícula
+        if valor < partícula['melhor_valor']:
+            partícula['melhor_valor'] = valor
+            partícula['melhor_posição'] = [novo_x, novo_y]
+
+        # Armazenar os resultados da partícula
+        resultados_partículas[i] = (partícula['posição'], valor)
+
+    iteração += 1
+
+# Algoritmo de ordenação - Insertion Sort
+for i in range(1, num_partículas):
+    j = i
+    while j > 0 and resultados_partículas[j][1] < resultados_partículas[j-1][1]:
+        resultados_partículas[j], resultados_partículas[j-1] = resultados_partículas[j-1], resultados_partículas[j]
+        j -= 1
+
+# Imprimir os resultados das partículas, do melhor ao pior
+for i in range(num_partículas):
+    posição, valor = resultados_partículas[i]
+    print(f"Partícula {i + 1}: Posição = {posição}, Valor = {valor}")
