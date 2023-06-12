@@ -59,8 +59,15 @@ while iteração < max_iterações:
         novo_y = y + nova_velocidade_y
 
         # Limitar as posições dentro do intervalo de busca
-        novo_x = max(intervalo_busca[0], min(intervalo_busca[1], novo_x))
-        novo_y = max(intervalo_busca[0], min(intervalo_busca[1], novo_y))
+        if novo_x < intervalo_busca[0]:
+           novo_x = intervalo_busca[0]
+        elif novo_x > intervalo_busca[1]:
+           novo_x = intervalo_busca[1]
+
+        if novo_y < intervalo_busca[0]:
+           novo_y = intervalo_busca[0]
+        elif novo_y > intervalo_busca[1]:
+           novo_y = intervalo_busca[1]
 
         partícula['posição'] = [novo_x, novo_y]
         partícula['velocidade'] = [nova_velocidade_x, nova_velocidade_y]
