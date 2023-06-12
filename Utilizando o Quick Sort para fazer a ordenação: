@@ -58,7 +58,7 @@ while iteração < max_iterações:
         novo_x = x + nova_velocidade_x
         novo_y = y + nova_velocidade_y
 
-        # Limitar as posições dentro do intervalo de busca
+# Limitar as posições dentro do intervalo de busca
         if novo_x < intervalo_busca[0]:
            novo_x = intervalo_busca[0]
         elif novo_x > intervalo_busca[1]:
